@@ -24,6 +24,9 @@
     <ClInclude Include="sounds.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -38,5 +41,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="README-CHN" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Beep_Generator.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="sound_128px_1195258_easyicon.net.ico">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
 </Project>
