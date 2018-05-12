@@ -88,7 +88,7 @@ int get_length(int fnote_length, int note) {
 }
 
 int identify_and_get_sum(int fnote_length, std::string ide) {
-    ide=ide+" ";
+    ide=ide+"-";
     int hyphen_index = 0, sum = 0;
     for (unsigned int i = 1; i<ide.length(); i += 1) {
         if (ide[i] == '-') {
@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
         int sum = identify_and_get_sum(fnote_length, note_type);
         if (sound_type == "br") {
             fout << "Sleep(" << sum << ");" << endl;
-            cout << "Identified "<<sum<<"th break note" << endl;
+            cout << "Identified "<<note_type<<"th break note" << endl;
             continue;
         }
         fin >> height;
