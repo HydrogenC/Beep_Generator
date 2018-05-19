@@ -172,7 +172,7 @@ int main(int argc, char *argv[])
     string infile;
     if (argc<2) {
         cout << "Please enter input file path (absolute path): " << endl;
-        cin >> infile;
+        getline(cin,infile);
     } else {
         infile = argv[1];
     }
@@ -184,15 +184,18 @@ int main(int argc, char *argv[])
     
     string note_type, sound_type;
     int height,clap=0,ctr=0;
+
     while (fin >> note_type) {
         if (note_type.substr(0, 2) == "//") {
             continue;
         }
+
         if(note_type.substr(0,2)=="el"){
             fout<<endl;
             cout<<"Strated new line"<<endl;
             continue;
         }
+
         if(note_type.substr(0,2)=="pr"){
             string m;
             getline(fin,m);
@@ -201,11 +204,13 @@ int main(int argc, char *argv[])
             cout<<"Printed \""<<m<<"\" to file"<<endl;
             continue;
         }
+
         if(note_type.substr(0,4)=="clap"){
             fin>>clap;
             ctr=0;
             continue;
         }
+
         if(note_type.substr(0,3)=="reg"){
             string m;
             getline(fin,m);
@@ -214,16 +219,19 @@ int main(int argc, char *argv[])
                 modified=false;
             }else{
             	reg_note(m);
-			}
-			continue;
+            }
+            continue;
         }
+
         fin >> sound_type;
         int sum = identify_and_get_sum(fnote_length, note_type);
+
         if (sound_type == "br") {
             fout << "Sleep(" << sum << ");" << endl;
             cout << "Identified "<<note_type<<"th break note" << endl;
             continue;
         }
+
         fin >> height;
         bool res=isResume(sound_type);
         int drmf = get_note_id(sound_type);
@@ -270,4 +278,3 @@ int main(int argc, char *argv[])
     system("pause>nul");
     return 0;
 }
-
