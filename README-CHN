@@ -21,6 +21,14 @@ pr vcd
   向文件写入 “vcd”
 el
   空一行
+clap 4
+  定义小结长度。（以四分音符为一拍），一小节四拍。小结长度定义后，小结之间将会自动空行。
+clap 0
+  禁用小结自动空行的功能
+reg do+ mi+ re- si#+
+  定义调号，do 和 mi 升，re 降，si# 升
+reg clear
+  清除调号
 
 样例：
 monody 600
