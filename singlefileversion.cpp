@@ -132,15 +132,13 @@ void reg_note(string m){
     if(items==0){
     	return;
     }
-    memset(sharpened,0,12*sizeof(int));
-    memset(flatened,0,12*sizeof(int));
     ftl=0,spl=0;
     for(int i=0;i<items;i+=1){
         int u=get_note_id(a[i].substr(0,a[i].length()-1));
         if(a[i][a[i].length()-1]=='+'){
             sharpened[spl]=u;
             spl+=1;
-        }else{
+        }else if(a[i][a[i].length()-1]=='-'){
             flatened[ftl]=u;
             ftl+=1;
         }
@@ -159,7 +157,7 @@ bool isResume(string &se){
 bool contains(int arr[],int arr_len,int result){
     bool cts=false;
     for(int i=0;i<arr_len;i+=1){
-        if(i==result){
+        if(arr[i]==result){
             cts=true;
             break;
         }
@@ -247,7 +245,7 @@ int main(int argc, char *argv[])
         if(modified&&(!res)){
             if(contains(sharpened,spl,drmf)){
                 drmf+=1;
-                if(drmf==8){
+                if(drmf==12){
                     height+=1;
                     drmf=0;
                 }
@@ -255,7 +253,7 @@ int main(int argc, char *argv[])
             }
             if(contains(flatened,ftl,drmf)){
                 drmf-=1;
-                if(drmf==0){
+                if(drmf==-1){
                     height-=1;
                     drmf=11;
                 }
@@ -278,3 +276,4 @@ int main(int argc, char *argv[])
     system("pause>nul");
     return 0;
 }
+
