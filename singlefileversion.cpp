@@ -268,7 +268,7 @@ int main(int argc, char *argv[])
             ctr+=sum;
             if(ctr>=fnote_length*clap){
                 fout<<endl;
-                ctr=0;
+                ctr-=fnote_length*clap;
             }
         }
     }
