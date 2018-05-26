@@ -5,7 +5,16 @@
 using namespace std;
 bool modified=false;
 int sharpened[12],flatened[12];
-int spl=0,ftl=0;
+int spl=0,ftl=0,clap=0,ctr=0;
+struct Command
+{
+    string n;
+    void (*todo)(ifstream&,ofstream&);
+    Command(string cmd,void (*td)(ifstream&,ofstream&)) {
+        todo=td;
+        n=cmd;
+    }
+};
 
 int sounds[7][12] = {
     { 33,35,37,39,41,44,46,49,52,55,58,62 },
@@ -130,7 +139,7 @@ void reg_note(string m){
         }
     }
     if(items==0){
-    	return;
+        return;
     }
     ftl=0,spl=0;
     for(int i=0;i<items;i+=1){
@@ -165,6 +174,47 @@ bool contains(int arr[],int arr_len,int result){
     return cts;
 }
 
+void doNothing(ifstream &fin,ofstream &fout){
+
+}
+
+void newLine(ifstream &fin,ofstream &fout){
+    fout<<endl;
+    cout<<"Strated new line"<<endl;
+}
+
+void printToFile(ifstream &fin,ofstream &fout){
+    string m;
+    getline(fin,m);
+    m=m.substr(1);
+    fout<<m<<endl;
+    cout<<"Printed \""<<m<<"\" to file"<<endl;
+}
+
+void setClap(ifstream &fin,ofstream &fout){
+    fin>>clap;
+    ctr=0;
+}
+
+void regNotes(ifstream &fin,ofstream &fout){
+    string m;
+    getline(fin,m);
+    m=m.substr(1);
+    if(m=="clear"){
+        modified=false;
+    }else{
+        reg_note(m);
+    }
+}
+
+Command n[5]={
+    Command("//",doNothing),
+    Command("el",newLine),
+    Command("pr",printToFile),
+    Command("clap",setClap),
+    Command("reg",regNotes)
+};
+
 int main(int argc, char *argv[])
 {
     string infile;
@@ -179,48 +229,22 @@ int main(int argc, char *argv[])
     int fnote_length;
     fin >> output_name >> fnote_length;
     ofstream fout(output_name.c_str());
-    
+
     string note_type, sound_type;
-    int height,clap=0,ctr=0;
+    int height;
 
     while (fin >> note_type) {
-        if (note_type.substr(0, 2) == "//") {
-            continue;
-        }
-
-        if(note_type.substr(0,2)=="el"){
-            fout<<endl;
-            cout<<"Strated new line"<<endl;
-            continue;
-        }
-
-        if(note_type.substr(0,2)=="pr"){
-            string m;
-            getline(fin,m);
-            m=m.substr(1);
-            fout<<m<<endl;
-            cout<<"Printed \""<<m<<"\" to file"<<endl;
-            continue;
-        }
-
-        if(note_type.substr(0,4)=="clap"){
-            fin>>clap;
-            ctr=0;
-            continue;
-        }
-
-        if(note_type.substr(0,3)=="reg"){
-            string m;
-            getline(fin,m);
-            m=m.substr(1);
-            if(m=="clear"){
-                modified=false;
-            }else{
-            	reg_note(m);
+        bool con=false;
+        for(int i=0;i<5;i+=1){
+            if(note_type.substr(0,n[i].n.length())==n[i].n){
+                n[i].todo(fin,fout);
+                con=true;
+                break;
             }
+        }
+        if(con){
             continue;
         }
-
         fin >> sound_type;
         int sum = identify_and_get_sum(fnote_length, note_type);
 
@@ -241,7 +265,7 @@ int main(int argc, char *argv[])
             cout << "Error: Can't identify time" << endl;
             continue;
         }
-        
+
         if(modified&&(!res)){
             if(contains(sharpened,spl,drmf)){
                 drmf+=1;
@@ -276,4 +300,3 @@ int main(int argc, char *argv[])
     system("pause>nul");
     return 0;
 }
-
