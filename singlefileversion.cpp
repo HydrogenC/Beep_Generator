@@ -250,7 +250,7 @@ string outputHelper(short i){
     case 1:
         return "sharpened ";
         break;
-    case 2:
+    case -1:
         return "flatened ";
         break;
     default:
@@ -314,6 +314,7 @@ int main(int argc, char *argv[])
             int temp=get_index(listMod,listModLength,note_id);
             if(temp>=0){
                 note_id+=listMod[temp].modify_way;
+                modify=listMod[temp].modify_way;
                 if(note_id<0){
                     height-=1;
                     note_id=11;
