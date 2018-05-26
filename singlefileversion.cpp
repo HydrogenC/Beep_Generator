@@ -144,9 +144,9 @@ bool contains(int arr[],int arr_len,int result){
     return cts;
 }
 
-int get_index(int arr[],int arr_len,int result){
+int get_index_in_array(ModifiedSound arr[],int arr_len,int result){
     for(int i=0;i<arr_len;i+=1){
-        if(arr[i]==result){
+        if(arr[i].note_id==result){
             return i;
         }
     }
@@ -311,7 +311,7 @@ int main(int argc, char *argv[])
         }
         short modify=0;
         if(!res){
-            int temp=get_index(listMod,listModLength,note_id);
+            int temp=get_index_in_array(listMod,listModLength,note_id);
             if(temp>=0){
                 note_id+=listMod[temp].modify_way;
                 modify=listMod[temp].modify_way;
