@@ -19,7 +19,7 @@ struct ModifiedSound
     int note_id;
     short modify_way;
     /*
-	ModifiedSound(int id,short modify_method) {
+    ModifiedSound(int id,short modify_method) {
         note_id=id;
         modify_way=modify_method;
     }
