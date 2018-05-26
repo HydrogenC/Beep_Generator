@@ -3,9 +3,7 @@
 #include <windows.h>
 #include <fstream>
 using namespace std;
-bool modified=false;
-int sharpened[12],flatened[12];
-int spl=0,ftl=0,clap=0,ctr=0;
+
 struct Command
 {
     string n;
@@ -15,6 +13,20 @@ struct Command
         n=cmd;
     }
 };
+
+struct ModifiedSound
+{
+    int note_id;
+    short modify_way;
+    ModifiedSound(int id,short modify_method) {
+        note_id=id;
+        modify_way=modify_method;
+    }
+};
+
+int listModLength,clap=0,ctr=0;
+
+ModifiedSound listMod[12];
 
 int sounds[7][12] = {
     { 33,35,37,39,41,44,46,49,52,55,58,62 },
@@ -26,7 +38,7 @@ int sounds[7][12] = {
     { 2093,2217,2349,2489,2637,2794,2960,3135,3322,3520,3729,3951 }
 };
 
-int get_note_id(string f) {
+short get_note_id(string f) {
     if (f == "do") {
         return 0;
     }
@@ -121,6 +133,26 @@ int identify_and_get_sum(int fnote_length, string ide) {
     }
 }
 
+bool contains(int arr[],int arr_len,int result){
+    bool cts=false;
+    for(int i=0;i<arr_len;i+=1){
+        if(arr[i]==result){
+            cts=true;
+            break;
+        }
+    }
+    return cts;
+}
+
+int get_index(int arr[],int arr_len,int result){
+    for(int i=0;i<arr_len;i+=1){
+        if(arr[i]==result){
+            return i;
+        }
+    }
+    return -1;
+}
+
 void reg_note(string m){
     string a[12];
     short items=0;
@@ -139,20 +171,29 @@ void reg_note(string m){
         }
     }
     if(items==0){
+        listModLength=0;
         return;
     }
     ftl=0,spl=0;
     for(int i=0;i<items;i+=1){
-        int u=get_note_id(a[i].substr(0,a[i].length()-1));
-        if(a[i][a[i].length()-1]=='+'){
-            sharpened[spl]=u;
-            spl+=1;
-        }else if(a[i][a[i].length()-1]=='-'){
-            flatened[ftl]=u;
-            ftl+=1;
+        int note_id=get_note_id(a[i].substr(0,a[i].length()-1));
+        if(contains(listMod,listModLength,note_id)){
+            continue;
+        }
+        switch(a[i][a[i].length()-1]){
+        case '+':
+            listMod[listModLength].note_id=note_id;
+            listMod[listModLength].modify_way=1;
+            listModLength+=1;
+            break;
+        case '-':
+            listMod[listModLength].note_id=note_id;
+            listMod[listModLength].modify_way=-1;
+            break;
+        default:
+            break;
         }
     }
-    modified=true;
 }
 
 bool isResume(string &se){
@@ -161,17 +202,6 @@ bool isResume(string &se){
         return true;
     }
     return false;
-}
-
-bool contains(int arr[],int arr_len,int result){
-    bool cts=false;
-    for(int i=0;i<arr_len;i+=1){
-        if(arr[i]==result){
-            cts=true;
-            break;
-        }
-    }
-    return cts;
 }
 
 void doNothing(ifstream &fin,ofstream &fout){
@@ -201,7 +231,7 @@ void regNotes(ifstream &fin,ofstream &fout){
     getline(fin,m);
     m=m.substr(1);
     if(m=="clear"){
-        modified=false;
+        listModLength=0;
     }else{
         reg_note(m);
     }
@@ -214,6 +244,20 @@ Command n[5]={
     Command("clap",setClap),
     Command("reg",regNotes)
 };
+
+string outputHelper(short i){
+    switch (i) {
+    case 1:
+        return "sharpened ";
+        break;
+    case 2:
+        return "flatened ";
+        break;
+    default:
+        return "";
+        break;
+    }
+}
 
 int main(int argc, char *argv[])
 {
@@ -256,8 +300,8 @@ int main(int argc, char *argv[])
 
         fin >> height;
         bool res=isResume(sound_type);
-        int drmf = get_note_id(sound_type);
-        if (drmf == -1) {
+        int note_id = get_note_id(sound_type);
+        if (note_id == -1) {
             cout << "Error: Invaild note" << endl;
             continue;
         }
@@ -265,28 +309,23 @@ int main(int argc, char *argv[])
             cout << "Error: Can't identify time" << endl;
             continue;
         }
-
-        if(modified&&(!res)){
-            if(contains(sharpened,spl,drmf)){
-                drmf+=1;
-                if(drmf==12){
-                    height+=1;
-                    drmf=0;
-                }
-                cout<<"Sound sharpened"<<endl;
-            }
-            if(contains(flatened,ftl,drmf)){
-                drmf-=1;
-                if(drmf==-1){
+        short modify=0;
+        if(!res){
+            int temp=get_index(listMod,listModLength,note_id);
+            if(temp>=0){
+                note_id+=listMod[temp].modify_way;
+                if(note_id<0){
                     height-=1;
-                    drmf=11;
+                    note_id=11;
                 }
-                cout<<"Sound flatened"<<endl;
+                if(note_id>11){
+                    height+=1;
+                    note_id=0;
+                }
             }
         }
-
-        fout << "Beep(" << sounds[height][drmf] << "," << sum << ");" << endl;
-        cout << "Identified " << note_type << "th note " << sound_type << endl;
+        fout << "Beep(" << sounds[height][note_id] << "," << sum << ");" << endl;
+        cout << "Identified "<<outputHelper(modify) << note_type << "th note " << sound_type << endl;
 
         if(clap!=0){
             ctr+=sum;
