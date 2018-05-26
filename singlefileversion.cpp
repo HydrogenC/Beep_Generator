@@ -170,11 +170,11 @@ void reg_note(string m){
             }
         }
     }
+    listModLength=0;
     if(items==0){
         listModLength=0;
         return;
     }
-    ftl=0,spl=0;
     for(int i=0;i<items;i+=1){
         int note_id=get_note_id(a[i].substr(0,a[i].length()-1));
         if(contains(listMod,listModLength,note_id)){
