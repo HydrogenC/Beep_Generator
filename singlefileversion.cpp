@@ -133,7 +133,7 @@ int identify_and_get_sum(int fnote_length, string ide) {
     }
 }
 
-bool contains(int arr[],int arr_len,int result){
+bool contains(ModifiedSound arr[],int arr_len,int result){
     bool cts=false;
     for(int i=0;i<arr_len;i+=1){
         if(arr[i]==result){
@@ -172,7 +172,6 @@ void reg_note(string m){
     }
     listModLength=0;
     if(items==0){
-        listModLength=0;
         return;
     }
     for(int i=0;i<items;i+=1){
