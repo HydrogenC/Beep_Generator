@@ -18,10 +18,12 @@ struct ModifiedSound
 {
     int note_id;
     short modify_way;
-    ModifiedSound(int id,short modify_method) {
+    /*
+	ModifiedSound(int id,short modify_method) {
         note_id=id;
         modify_way=modify_method;
     }
+    */
 };
 
 int listModLength,clap=0,ctr=0;
@@ -136,7 +138,7 @@ int identify_and_get_sum(int fnote_length, string ide) {
 bool contains(ModifiedSound arr[],int arr_len,int result){
     bool cts=false;
     for(int i=0;i<arr_len;i+=1){
-        if(arr[i]==result){
+        if(arr[i].note_id==result){
             cts=true;
             break;
         }
