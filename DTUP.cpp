@@ -89,13 +89,8 @@ filling fil[5]={
 };
 
 int main(){
-    HANDLE h = GetStdHandle ( STD_OUTPUT_HANDLE );
-    WORD wOldColorAttrs;
-    CONSOLE_SCREEN_BUFFER_INFO csbiInfo;
-    GetConsoleScreenBufferInfo(h, &csbiInfo);
-    wOldColorAttrs = csbiInfo.wAttributes;
     for(int i=0;i<6;i+=1){
-            slowprintln(25,list[i]);
+        slowprintln(25,list[i]);
     }
     start: char y;
     cin>>y;
@@ -129,8 +124,8 @@ int main(){
         HANDLE hThread = CreateThread(NULL, 0, Wait, new int(5000), 0, NULL);
         cin>>asn;
         if(asn>96&&asn<123){
-                asn-=32;
-                }
+            asn-=32;
+        }
         if(asn==csi[i].answer){
             TerminateThread(hThread,0);
             continue;
