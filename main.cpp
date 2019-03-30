@@ -264,7 +264,7 @@ int main(int argc, char *argv[])
 {
     string infile;
     if (argc<2) {
-        cout << "Please enter input file path (absolute path): " << endl;
+        cout << "Please enter input file path (without quotes): " << endl;
         getline(cin,infile);
     } else {
         infile = argv[1];
