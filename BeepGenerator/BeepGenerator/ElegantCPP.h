@@ -177,5 +177,14 @@ namespace ElegantCPP {
 #define CharSwitch(str)   switch(ElegantCPP::getHash(str))
 #define StrCase(str)      case ElegantCPP::getHash(str)
 
+	template <typename IN, typename OUT>
+	OUT SStreamConvert(IN a) {
+		SStream ss;
+		ss << a;
+		OUT b;
+		ss >> b;
+		return b;
+	}
+
 	//function define ends
 }
