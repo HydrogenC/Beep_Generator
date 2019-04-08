@@ -1,19 +1,21 @@
 Beep 生成器 By 231
 
 使用说明：
-创建一个文件，修改备注名为 .bgscript，向里面写入旋律（见编码格式）
-打开 BeepGenerator.exe，输入旋律文件的绝对路径，BeepGenerator 会在当前目录下生成 Beep 源代码
+创建一个文本文档，向里面写入旋律（见编码格式）
+打开 BeepGenerator.exe，输入旋律文件的路径
 
 编码格式（称为 BGScript）：
-sampleout.txt 400
-  sampleout.txt 为输出文件名，400 代表一个四分音符为 400 毫秒
-note 4 do# 4
+out sampleout.txt
+  输出文件名设为 sampleout.txt
+bpm 120
+  将 BPM 设定为 120 （以四分音符为一拍，默认 120）
+note 4 C#4
   note 是音符指令，第一个 4 表示四分音符，do# 为音高，最后一个 4 表示第四个音阶（中央C位于第三个音阶），音阶范围 0~6
-note 4-8 so# 4
+note 4-8 G#4
   4-8 表示一个四分音符的长度加一个八分音符的长度，“-” 为延音线
-note 1-1-1 fa 4
+note 1-1-1 F4
   同上，1-1-1 表示三个全音符长度的和
-note 2 br
+br 2
   一个二分休止符，br为休止符
 //thisisanote
   这是注释，注释以 “//” 开头
@@ -21,89 +23,6 @@ pr vcd
   向文件写入 “vcd”
 el
   空一行
-clap 4
-  定义小结长度。（以四分音符为一拍），一小节四拍。小结长度定义后，小结之间将会自动空行。
-clap 0
-  禁用小结自动空行的功能
-reg do+ mi+ re- si#+
-  定义调号，do 和 mi 升，re 降，si# 升
-reg clear
-  清除调号
-
-样例：
-monody 600
-8-16 do# 3
-16 do# 3
-8 mi 3
-8 fa# 3
-8-16 do# 3
-16 do# 3
-8 mi 3
-8 fa# 3
-8 so# 3
-8 so# 3
-16 so# 3
-16 fa# 3
-16 mi 3
-16 so# 3
-8 fa# 3
-16 mi 3
-8 fa# 3
-8-16 so# 3
-//imanote
-8-16 do# 3
-16 do# 3
-8 mi 3
-8 fa# 3
-8-16 do# 3
-16 do# 3
-8 mi 3
-8 do# 4
-8 si 3
-8 so# 3
-16 fa# 3
-16 mi 3
-16 fa# 3
-16 so# 3
-8 si 3
-16 so# 3
-8 fa# 3
-8-16 mi 3
-
-样例生成结果：
-Beep(277,450);
-Beep(277,150);
-Beep(329,300);
-Beep(370,300);
-Beep(277,450);
-Beep(277,150);
-Beep(329,300);
-Beep(370,300);
-Beep(415,300);
-Beep(415,300);
-Beep(415,150);
-Beep(370,150);
-Beep(329,150);
-Beep(415,150);
-Beep(370,300);
-Beep(329,150);
-Beep(370,300);
-Beep(415,450);
-Beep(277,450);
-Beep(277,150);
-Beep(329,300);
-Beep(370,300);
-Beep(277,450);
-Beep(277,150);
-Beep(329,300);
-Beep(554,300);
-Beep(494,300);
-Beep(415,300);
-Beep(370,150);
-Beep(329,150);
-Beep(370,150);
-Beep(415,150);
-Beep(494,300);
-Beep(415,150);
-Beep(370,300);
-Beep(329,450);
+sign C#
+  将调号设为 C# 大调，大写字母表示大调，小写字母为小调
+  
