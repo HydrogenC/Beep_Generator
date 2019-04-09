@@ -8,6 +8,7 @@
 #include <fstream>
 #include <streambuf>
 #include <string_view>
+#include <sstream>
 
 namespace ElegantCPP {
 
@@ -160,22 +161,32 @@ namespace ElegantCPP {
 	constexpr UInt64 basis = 0xCBF29CE484222325ull;
 
 	template <typename T>
-	constexpr Int64 getHash(const T* str)
+	constexpr UInt64 constGetHash(const T* str)
 	{
 		UInt64 ret{ basis };
-
 		while (*str) {
 			ret ^= *str;
 			ret *= prime;
-			str++;
+			str += 1;
 		}
-
 		return ret;
 	}
 
-#define StringSwitch(str) switch(ElegantCPP::getHash(str.c_str()))
-#define CharSwitch(str)   switch(ElegantCPP::getHash(str))
-#define StrCase(str)      case ElegantCPP::getHash(str)
+	template <typename T>
+	UInt64 getHash(const T* str)
+	{
+		UInt64 ret{ basis };
+		while (*str) {
+			ret ^= *str;
+			ret *= prime;
+			str += 1;
+		}
+		return ret;
+	}
+
+#define StrSwitch(str)  switch(ElegantCPP::getHash(str.c_str()))
+#define CStrSwitch(str) switch(ElegantCPP::getHash(str))
+#define StrCase(str)    ElegantCPP::constGetHash(str)
 
 	template <typename IN, typename OUT>
 	OUT SStreamConvert(IN a) {
