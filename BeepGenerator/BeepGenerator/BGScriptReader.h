@@ -32,7 +32,7 @@ public:
 	Property(get = getToken) String Token;
 };
 
-extern Command cmdList[];
+extern array<Command, 8> cmdList;
 
 UInt32 identifyTime(String time);
 UInt32 identifyNoteLen(String noteType);

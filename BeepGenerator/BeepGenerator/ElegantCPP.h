@@ -157,6 +157,8 @@ namespace ElegantCPP {
 
 #endif // UNICODE
 
+#pragma warning( disable : 4307 )
+
 	constexpr UInt64 prime = 0x100000001B3ull;
 	constexpr UInt64 basis = 0xCBF29CE484222325ull;
 

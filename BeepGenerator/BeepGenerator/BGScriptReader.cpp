@@ -58,7 +58,7 @@ String Command::getToken() {
 	return token;
 }
 
-Command cmdList[] = {
+array<Command, 8> cmdList = {
 	Command(String(L"el"), [&](String parms) {
 		fout << L"\r\n";
 	}),
@@ -80,8 +80,8 @@ Command cmdList[] = {
 		forthNoteLen = 60000u / bpm;
 		wcout << "BPM set to " << parms << ". " << endl;
 	}),
-		Command(String(L"sign"), [&](String parms) {
-			StrSwitch(parms) {
+	Command(String(L"sign"), [&](String parms) {
+		StrSwitch(parms) {
 			case StrCase(L"C"):
 			case StrCase(L"a"):
 				break;
@@ -172,7 +172,7 @@ UInt32 identifyNoteLen(String noteType) {
 			break;
 		}
 	}
-	return (forthNoteLen * 4) / pow(2u, times);
+	return (forthNoteLen * 4u) / pow(2u, times);
 }
 
 UInt32 identifyPitch(String pitch) {
@@ -180,7 +180,7 @@ UInt32 identifyPitch(String pitch) {
 	UInt32 pitchId = 0;
 	UInt32 signId = 0;
 	String pitchName = pitch.substr(0, pitch.length() - 1);
-	StrSwitch (pitchName) {
+	StrSwitch(pitchName) {
 	case StrCase(L"A"):
 		pitchId = 0;
 		signId = 0;
