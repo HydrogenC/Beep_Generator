@@ -18,6 +18,46 @@ UInt16 forthNoteLen = 500;
 IFStream fin;
 OFStream fout;
 
+vector<String> split(String source, Char seperator) {
+	auto findAndReturn = [&](Int32 & save) {
+		save = source.find(seperator);
+		return save;
+	};
+
+	vector<String> res = vector<String>();
+	Int32 index = 0;
+	while (findAndReturn(index) != String::npos) {
+		if (source.substr(0, index) != L"") {
+			res.push_back(source.substr(0, index));
+		}
+		source = source.substr(index + 1);
+	}
+	if (source != L"") {
+		res.push_back(source);
+	}
+	return res;
+}
+
+Command::Command(String token, function<void(String)> func) {
+	VThis.token = token;
+	VThis.func = func;
+}
+
+Boolean Command::Execute(String parms) {
+	try {
+		func(parms);
+		return true;
+	}
+	catch (String e) {
+		wcout << e << endl;
+		return false;
+	}
+}
+
+String Command::getToken() {
+	return token;
+}
+
 Command cmdList[] = {
 	Command(String(L"el"), [&](String parms) {
 		fout << L"\r\n";
@@ -100,40 +140,118 @@ Command cmdList[] = {
 			default:
 				break;
 			}
-			fout << L"Sign changed to " << parms << L". ";
+			wcout << L"Sign changed to " << parms << L". " << endl;
 		}),
-		/*
-		Command("note", function(string parms){
-			string[] arguments = parms.split(' ');
-			uint timeNote = identifyTime(arguments[0]);
-			uint pitchIndex = identifyPitch(arguments[1]);
-			std.file.append(outFile, "Beep("~to!(string)(hzTable[pitchIndex])~", "~to!(string)(timeNote)~");\r\n");
-			writeln("Identified note: "~parms);
+		Command(String(L"note"), [&](String parms) {
+			vector<String> arguments = split(parms,L' ');
+			UInt32 timeNote = identifyTime(arguments[0]);
+			UInt32 pitchIndex = identifyPitch(arguments[1]);
+			fout << L"Beep(" << SStreamConvert<UInt32,String>(hzTable[pitchIndex]) << L", " << SStreamConvert<UInt32, String>(timeNote) << L");\r\n";
+			wcout << L"Identified note: " << parms << endl;
 		}),
-		Command("br", function(string parms){
-			uint timeBr = identifyTime(parms);
-			std.file.append(outFile, "Sleep("~to!(string)(timeBr)~");\r\n");
-			writeln("Identified break: "~parms);
+		Command(String(L"br"), [&](String parms) {
+			UInt32 timeBr = identifyTime(parms);
+			fout << L"Sleep(" << SStreamConvert<UInt32, String>(timeBr) << L");\r\n";
+			wcout << L"Identified break: " << parms << endl;
 		})
-		*/
 };
 
-Command::Command(String token, function<void(String)> func) {
-	VThis.token = token;
-	VThis.func = func;
+UInt32 identifyTime(String time) {
+	vector<String> noteList = split(time, L'-');
+	UInt32 lenInForthNote = 0;
+	for (String i : noteList) {
+		lenInForthNote += identifyNoteLen(i);
+	}
+	return lenInForthNote;
 }
 
-Boolean Command::Execute(String parms) {
-	try {
-		func(parms);
-		return true;
+UInt32 identifyNoteLen(String noteType) {
+	UInt32 times = 0;
+	for (; times < 10; times += 1) {
+		if (noteType == SStreamConvert<UInt32, String>(pow(2u, times))) {
+			break;
+		}
 	}
-	catch (String e) {
-		wcout << e << endl;
-		return false;
-	}
+	return (forthNoteLen * 4) / pow(2u, times);
 }
 
-String Command::getToken() {
-	return token;
+UInt32 identifyPitch(String pitch) {
+	UInt32 num = SStreamConvert<String, UInt32>(pitch.substr(pitch.length() - 1));
+	UInt32 pitchId = 0;
+	UInt32 signId = 0;
+	String pitchName = pitch.substr(0, pitch.length() - 1);
+	StrSwitch (pitchName) {
+	case StrCase(L"A"):
+		pitchId = 0;
+		signId = 0;
+		break;
+	case StrCase(L"A#"):
+		pitchId = 1;
+		signId = 0;
+		break;
+	case StrCase(L"Bb"):
+		pitchId = 1;
+		signId = 1;
+		break;
+	case StrCase(L"B"):
+		pitchId = 2;
+		signId = 1;
+		break;
+	case StrCase(L"C"):
+		pitchId = 3;
+		signId = 2;
+		break;
+	case StrCase(L"C#"):
+		pitchId = 4;
+		signId = 2;
+		break;
+	case StrCase(L"Db"):
+		pitchId = 4;
+		signId = 3;
+		break;
+	case StrCase(L"D"):
+		pitchId = 5;
+		signId = 3;
+		break;
+	case StrCase(L"D#"):
+		pitchId = 6;
+		signId = 3;
+		break;
+	case StrCase(L"Eb"):
+		pitchId = 6;
+		signId = 4;
+		break;
+	case StrCase(L"E"):
+		pitchId = 7;
+		signId = 4;
+		break;
+	case StrCase(L"F"):
+		pitchId = 8;
+		signId = 5;
+		break;
+	case StrCase(L"F#"):
+		pitchId = 9;
+		signId = 5;
+		break;
+	case StrCase(L"Gb"):
+		pitchId = 9;
+		signId = 6;
+		break;
+	case StrCase(L"G"):
+		pitchId = 10;
+		signId = 6;
+		break;
+	case StrCase(L"G#"):
+		pitchId = 11;
+		signId = 6;
+		break;
+	case StrCase(L"Ab"):
+		pitchId = 11;
+		signId = 0;
+		break;
+	default:
+		break;
+	}
+	pitchId += regModify[signId];
+	return num * 12 + pitchId;
 }

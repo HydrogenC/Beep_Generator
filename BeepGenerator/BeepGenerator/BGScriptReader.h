@@ -3,6 +3,7 @@
 #include <functional>
 #include <iostream>
 #include <array>
+#include <vector>
 
 using namespace ElegantCPP;
 using namespace std;
@@ -13,6 +14,8 @@ extern array<Int16, 7> regModify;;
 extern UInt16 forthNoteLen;
 extern IFStream fin;
 extern OFStream fout;
+
+vector<String> split(String source, Char seperator);
 
 class Command {
 private:
@@ -30,3 +33,7 @@ public:
 };
 
 extern Command cmdList[];
+
+UInt32 identifyTime(String time);
+UInt32 identifyNoteLen(String noteType);
+UInt32 identifyPitch(String pitch);
