@@ -4,14 +4,16 @@
 #include <iostream>
 #include <array>
 #include <vector>
+#include <filesystem>
 
+using namespace std::filesystem;
 using namespace ElegantCPP;
 using namespace std;
 
 extern const UInt32 hzTable[];
 extern String sourceFile, outFile;
 extern array<Int16, 7> regModify;;
-extern UInt16 forthNoteLen;
+extern UInt32 forthNoteLen;
 extern IFStream fin;
 extern OFStream fout;
 

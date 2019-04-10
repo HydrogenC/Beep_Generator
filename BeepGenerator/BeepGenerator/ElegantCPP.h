@@ -8,6 +8,7 @@
 #include <fstream>
 #include <streambuf>
 #include <string_view>
+#include <iostream>
 #include <sstream>
 
 namespace ElegantCPP {
@@ -43,8 +44,10 @@ namespace ElegantCPP {
 	using SStream = std::wstringstream;
 	using ISStream = std::wistringstream;
 	using OSStream = std::wostringstream;
+	using IOStream = std::wiostream;
 	using IStream = std::wistream;
 	using OStream = std::wostream;
+	using FStream = std::wfstream;
 	using IFStream = std::wifstream;
 	using OFStream = std::wofstream;
 	using StringBuf = std::wstringbuf;
@@ -63,8 +66,10 @@ namespace ElegantCPP {
 	using SStream = std::stringstream;
 	using ISStream = std::istringstream;
 	using OSStream = std::ostringstream;
+	using IOStream = std::iostream;
 	using IStream = std::istream;
 	using OStream = std::ostream;
+	using FStream = std::fstream;
 	using IFStream = std::ifstream;
 	using OFStream = std::ofstream;
 	using StringBuf = std::stringbuf;

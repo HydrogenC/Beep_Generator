@@ -1,23 +1,20 @@
 #include "BGScriptReader.h"
-#include <filesystem>
-
-using namespace std::filesystem;
 
 int wmain(int argc, Char* argv[])
 {
+	NoSync;
 	if (argc == 2) {
 		sourceFile = argv[1];
-		fin = IFStream(sourceFile);
 	}
 	else {
 		wcout << L"File name: ";
 		wcin >> sourceFile;
-		fin = IFStream(sourceFile);
 	}
 	if (!exists(path(sourceFile))) {
 		wcout << L"Failed: " << sourceFile << L" doesn't exist! " << endl;
 	}
 	else {
+		fin.open(sourceFile);
 		String content;
 		while (getline(fin, content)) {
 			for (Command cmd : cmdList) {
