@@ -83,9 +83,9 @@ namespace ElegantCPP {
 
 	//keyword define starts
 
-#define var        auto
-#define VThis      (*this)
-#define cast(type) static_cast<type>
+#define var   auto
+#define VThis (*this)
+#define cast  static_cast
 
 #define implicit
 #define unsafe
@@ -161,8 +161,6 @@ namespace ElegantCPP {
 #define StrTok(...)    strtok(__VA_ARGS__)
 
 #endif // UNICODE
-
-#pragma warning( disable : 4307 )
 
 	constexpr UInt64 prime = 0x100000001B3ull;
 	constexpr UInt64 basis = 0xCBF29CE484222325ull;
